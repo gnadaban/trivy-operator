@@ -445,6 +445,7 @@ func buildPolicyLoader(tc trivyoperator.ConfigData) (policy.Loader, error) {
 		}
 		artifact.RegistryOptions = ro
 	}
+	setupLog.Info("Using policy bundle registry options", "artifact", artifact)
 	policyLoader := policy.NewPolicyLoader(tc.PolicyBundleOciRef(), gcache.New(1).LRU().Build(), ro, mp.WithOCIArtifact(artifact))
 	return policyLoader, nil
 }

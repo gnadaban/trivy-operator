@@ -4,17 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/aquasecurity/trivy/pkg/fanal/types"
 	mp "github.com/aquasecurity/trivy/pkg/policy"
 	"github.com/bluele/gcache"
 	"github.com/go-logr/logr"
 	"golang.org/x/xerrors"
-	"os"
-	"path/filepath"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"strings"
-	"sync"
-	"time"
 )
 
 const (
@@ -111,6 +112,7 @@ func (pl *policyLoader) getBuiltInPolicies(ctx context.Context) ([]string, error
 		return nil, xerrors.Errorf("policy client error: %w", err)
 	}
 
+	pl.logger.Info("Downloading built-in policies from registry", "registryOptions", pl.RegistryOptions)
 	if err = client.DownloadBuiltinPolicies(ctx, pl.RegistryOptions); err != nil {
 		return nil, xerrors.Errorf("failed to download built-in policies: %w", err)
 	}
